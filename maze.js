@@ -184,6 +184,9 @@ const getMazeButton = document.querySelector("#get-maze-button")
 
 getMazeButton.addEventListener("click", ()=>{
     maze = convertToArray(size)
+    for (let grid of grids) {
+        grid.classList.remove("path")
+    }
     env = new Environment(maze, start, target)
 })
 
@@ -286,7 +289,7 @@ const test = function (valueFunc) {
         y = next_y
         done = newDone
         index ++
-        if (index === 10) {
+        if (index === 1000) {
             break
         }
     }
