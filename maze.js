@@ -183,7 +183,7 @@ const getMazeButton = document.querySelector("#get-maze-button")
 
 getMazeButton.addEventListener("click", ()=>{
     maze = convertToArray(size)
-    env = new Environment(maze, [0, 0], [size-1, size-1])
+    env = new Environment(maze, start, end)
 })
 
 
@@ -212,6 +212,7 @@ for (let grid of grids) {
             e.target.classList.add("end-grid")
             let str = e.target.classList[1]
             end = [parseInt(str[str.length - 3]), parseInt(str[str.length - 1])]
+            console.log(end)
         }
     })
 }
