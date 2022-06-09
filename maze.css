@@ -1,0 +1,124 @@
+* {
+    box-sizing: border-box;
+}
+
+
+:root {
+    --maze-size: 280px;
+    --maze-row-height: 50px;
+    --border-radius: 5px;
+}
+
+
+.maze {
+    border: 5px solid #000;
+    width: var(--maze-size);
+    box-sizing: content-box;
+    height: calc(var(--maze-size) + 30px);
+    display: flex;
+    flex-direction: column;
+}
+
+
+.maze-row,
+.maze-wall-row {
+    display: flex;
+}
+
+
+.maze-row {
+    flex: 16;
+}
+
+
+.maze-grid,
+.maze-wall {
+    border: 1px solid #aaa;
+}
+
+
+.maze-grid {
+    flex: 16;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.maze-wall {
+    flex: 1;    
+}
+
+
+.maze-row > .maze-wall,
+.maze-wall-row > .maze-grid {
+    cursor: pointer;
+}
+
+
+.maze-row > .maze-grid:hover,
+.maze-row > .maze-wall:hover,
+.maze-wall-row > .maze-grid:hover
+{
+    background-color: #ccc;
+}
+
+
+.maze-wall--active {
+    background-color: #000;
+}
+
+
+.maze-wall-row {
+    flex: 1; 
+}
+
+
+.controller {
+    margin-top: 35px;
+}
+
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    width: 100px;
+    background-color: #aaa;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+}
+
+
+.btn:hover {
+    background-color: #ddd;
+}
+
+
+.btn--active {
+    background-color: rgb(150, 150, 255);
+}
+
+
+.start-grid {
+    background-color: rgb(150, 150, 255);
+}
+
+
+.end-grid {
+    background-color: rgb(255, 150, 150);
+}
+
+
+.agent {
+    border-radius: 50%;
+    background-color: rgb(150, 255, 150);
+    width: 60%;
+    height: 60%;
+}
+
+.path {
+    background-color: #aaa;
+}

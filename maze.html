@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Maze</title>
+        <link rel="stylesheet" href="maze.css" />
+    </head>
+    <body>
+        <div class="maze">
+            <div class='maze-row'>
+	               <div class='maze-grid js-grid-0-0 start-grid'></div>
+	               <div class='maze-wall js-wall-verti-right-0-0 js-wall-verti-left-0-1'></div>
+	               <div class='maze-grid js-grid-0-1'></div>
+	               <div class='maze-wall js-wall-verti-right-0-1 js-wall-verti-left-0-2'></div>
+	               <div class='maze-grid js-grid-0-2'></div>
+	               <div class='maze-wall js-wall-verti-right-0-2 js-wall-verti-left-0-3 maze-wall--active'></div>
+	               <div class='maze-grid js-grid-0-3'></div>
+            </div>
+            <div class='maze-wall-row'>
+                <div class='maze-grid js-wall-hori-down-0-0 js-wall-hori-up-1-0'></div>
+                <div class='maze-wall'></div>
+                <div class='maze-grid js-wall-hori-down-0-1 js-wall-hori-up-1-1'></div>
+                <div class='maze-wall'></div>
+                <div class='maze-grid js-wall-hori-down-0-2 js-wall-hori-up-1-2'></div>
+                <div class='maze-wall'></div>
+                <div class='maze-grid js-wall-hori-down-0-3 js-wall-hori-up-1-3'></div>
+            </div>
+            <div class='maze-row'>
+                <div class='maze-grid js-grid-1-0'></div>
+                <div class='maze-wall js-wall-verti-right-1-0 js-wall-verti-left-1-1 maze-wall--active'></div>
+                <div class='maze-grid js-grid-1-1'></div>
+                <div class='maze-wall js-wall-verti-right-1-1 js-wall-verti-left-1-2 maze-wall--active'></div>
+                <div class='maze-grid js-grid-1-2'></div>
+                <div class='maze-wall js-wall-verti-right-1-2 js-wall-verti-left-1-3 maze-wall--active'></div>
+                <div class='maze-grid js-grid-1-3'></div>
+            </div>
+            <div class='maze-wall-row'>
+                <div class='maze-grid js-wall-hori-down-1-0 js-wall-hori-up-2-0'></div>
+                <div class='maze-wall'></div>
+                <div class='maze-grid js-wall-hori-down-1-1 js-wall-hori-up-2-1'></div>
+                <div class='maze-wall'></div>
+                <div class='maze-grid js-wall-hori-down-1-2 js-wall-hori-up-2-2 maze-wall--active'></div>
+                <div class='maze-wall'></div>
+                <div class='maze-grid js-wall-hori-down-1-3 js-wall-hori-up-2-3'></div>
+            </div>
+            <div class='maze-row'>
+                <div class='maze-grid js-grid-2-0'></div>
+                <div class='maze-wall js-wall-verti-right-2-0 js-wall-verti-left-2-1 maze-wall--active'></div>
+                <div class='maze-grid js-grid-2-1'></div>
+                <div class='maze-wall js-wall-verti-right-2-1 js-wall-verti-left-2-2'></div>
+                <div class='maze-grid js-grid-2-2'></div>
+                <div class='maze-wall js-wall-verti-right-2-2 js-wall-verti-left-2-3'></div>
+                <div class='maze-grid js-grid-2-3'></div>
+            </div>
+            <div class='maze-wall-row'>
+                <div class='maze-grid js-wall-hori-down-2-0 js-wall-hori-up-3-0'></div>
+                <div class='maze-wall'></div>
+                <div class='maze-grid js-wall-hori-down-2-1 js-wall-hori-up-3-1 maze-wall--active'></div>
+                <div class='maze-wall'></div>
+                <div class='maze-grid js-wall-hori-down-2-2 js-wall-hori-up-3-2'></div>
+                <div class='maze-wall'></div>
+                <div class='maze-grid js-wall-hori-down-2-3 js-wall-hori-up-3-3'></div>
+            </div>
+            <div class='maze-row'>
+                <div class='maze-grid js-grid-3-0'></div>
+                <div class='maze-wall js-wall-verti-right-3-0 js-wall-verti-left-3-1'></div>
+                <div class='maze-grid js-grid-3-1'></div>
+                <div class='maze-wall js-wall-verti-right-3-1 js-wall-verti-left-3-2'></div>
+                <div class='maze-grid js-grid-3-2'></div>
+                <div class='maze-wall js-wall-verti-right-3-2 js-wall-verti-left-3-3 maze-wall--active'></div>
+                <div class='maze-grid js-grid-3-3 end-grid'></div>
+            </div>
+        </div>
+        <div class="controller">
+            <div id="start-button" class="btn">Choose start</div>
+            <br>
+            <div id="end-button" class="btn">Choose end</div>
+            <br> 
+            <div id="get-maze-button" class="btn">Get Maze</div>
+            <br> 
+            <div id="solve-button" class="btn">Solve</div>
+        </div>
+        <script src="maze.js"></script>
+    </body>
+</html>
