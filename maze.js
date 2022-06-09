@@ -25,6 +25,7 @@ class Agent {
 
 class Environment {
     constructor(policy, start, target) {
+        console.log(target)
         this.policy = policy
         this.start = start
         this.target = target
@@ -183,7 +184,7 @@ const getMazeButton = document.querySelector("#get-maze-button")
 
 getMazeButton.addEventListener("click", ()=>{
     maze = convertToArray(size)
-    env = new Environment(maze, start, end)
+    env = new Environment(maze, start, target)
 })
 
 
@@ -211,8 +212,7 @@ for (let grid of grids) {
             }
             e.target.classList.add("end-grid")
             let str = e.target.classList[1]
-            end = [parseInt(str[str.length - 3]), parseInt(str[str.length - 1])]
-            console.log(end)
+            target = [parseInt(str[str.length - 3]), parseInt(str[str.length - 1])]
         }
     })
 }
@@ -311,7 +311,7 @@ solveButton.addEventListener("click", (e)=> {
                         newValue += 0.25
                     }
                 }
-                if (i == size-1 && j == size-1) {
+                if (i == target[0] && j == target[1]) {
                     valueFunc[i][j] = 0
                 } else {
                     valueFunc[i][j] = newValue
