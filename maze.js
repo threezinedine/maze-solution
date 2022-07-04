@@ -1,12 +1,101 @@
 const size = 5
 const mazeContainer = document.querySelector(".maze")
 const solveButton = document.querySelector("#solve-button")
+const getBtn = document.querySelector("#fetch")
+
+
+mazeContainer.innerHTML = createMaze(size)
+
 var env = null
 var maze = null
 var start = null
 var target = null
+var currentMaze = null
 
 //import {Agent} from './agent.js'
+var directionPolicy = {
+    "0": [0, 1, 2, 3],
+    "1": [1, 0, 3, 2],
+    "2": [3, 2, 0, 1],
+    "3": [2, 3, 1, 0]
+}
+//var host = "http://thao-nguyen-the.lovestoblog.com/"
+var host = "http://localhost:81/"
+
+var api = host + "maze/api/init-maze.php?id="
+
+function fetchMaze(api) {
+    fetch(api)
+        .then((data) => data.json())
+        .then((data) => {
+            if (data['result'] === true) {
+                const startStr = data['beg_pos']
+                const endStr = data['end_pos']
+                start = new Array(2)
+                start[0] = parseInt(startStr[0])
+                start[1] = parseInt(startStr[1])
+                target = new Array(2)
+                target[0] = parseInt(endStr[0])
+                target[1] = parseInt(endStr[1])
+                //console.log(start, target)
+                currentMaze = stringToMaze(data['current_maze'])
+                arrayToMaze(currentMaze)
+                drawStart()
+                drawEnd()
+            }
+        }).catch(()=>{})
+}
+
+function drawStart() {
+    const grids = document.querySelectorAll(".maze-row > .maze-grid") 
+    let [start_x, start_y] = start
+    grids.forEach((grid)=> {
+        if (grid.classList.contains(`js-grid-${start_x}-${start_y}`)) {
+            grid.classList.add("start-grid")
+        } else {
+            grid.classList.remove("start-grid")
+        }
+    })
+}
+
+function drawEnd() {
+    const grids = document.querySelectorAll(".maze-row > .maze-grid") 
+    let [end_x, end_y] = target
+    grids.forEach((grid)=> {
+        if (grid.classList.contains(`js-grid-${end_x}-${end_y}`)) {
+            grid.classList.add("end-grid")
+        } else {
+            grid.classList.remove("end-grid")
+        }
+    })
+}
+
+function stringToMaze(data) {
+    let maze = creatZeroArray(size)
+    for (let i=0; i<size; i++) {
+        for (let j=0; j<size; j++) {
+            for (let z=0; z<4; z++) {
+                let index = i * (size * 4) + j * 4 + z 
+                maze[i][j][z] = parseInt(data[index])
+            }
+        }
+    }
+    return maze
+}
+
+
+function mazeToString(maze) {
+    let result = ""
+
+    for (let i=0; i<maze.length; i++) {
+        for (let j=0; j<maze[i].length; j++) {
+            for (let z=0; z<maze[i][j].length; z++) {
+                result += maze[i][j][z]
+            }
+        }
+    }
+    return result
+}
 
 
 class Agent {
@@ -25,7 +114,6 @@ class Agent {
 
 class Environment {
     constructor(policy, start, target) {
-        console.log(target)
         this.policy = policy
         this.start = start
         this.target = target
@@ -87,7 +175,7 @@ const initialPolicy  = function(size) {
 var valueFunc = initialPolicy(size)
 
 
-const createMaze = function(size) {
+function createMaze (size) {
     let result = ""
     for (let i=0; i<size; i++) {
         result += "\n<div class='maze-row'>"
@@ -114,7 +202,6 @@ const createMaze = function(size) {
     return result
 }
 
-mazeContainer.innerHTML = createMaze(size)
 
 
 const agent = new Agent(document, document.querySelector(".js-grid-0-0"))
@@ -171,6 +258,41 @@ const convertToArray = function (size) {
         }
     } 
     return initMaze
+}
+
+
+function arrayToMaze(curMaze) {
+    const walls = [...Array.from(document.querySelectorAll(".maze-row > .maze-wall")), ...Array.from(document.querySelectorAll(".maze-wall-row > .maze-grid"))]
+    walls.forEach((wall)=> {wall.classList.add("maze-wall--active")})
+
+    for (let i=0; i<size; i++) {
+        for (let j=0; j<size; j++) {
+            if (curMaze[i][j][0] === 1) {
+                let wall = document.querySelector(`.js-wall-hori-up-${i}-${j}`)
+                if (wall?.classList) {
+                    wall.classList.remove("maze-wall--active")
+                }
+            } 
+            if (curMaze[i][j][1] === 1) {
+                let wall = document.querySelector(`.js-wall-hori-down-${i}-${j}`)
+                if (wall?.classList) {
+                    wall.classList.remove("maze-wall--active")
+                }
+            } 
+            if (curMaze[i][j][2] === 1) {
+                let wall = document.querySelector(`.js-wall-verti-left-${i}-${j}`)
+                if (wall?.classList) {
+                    wall.classList.remove("maze-wall--active")
+                }
+            } 
+            if (curMaze[i][j][3] === 1) {
+                let wall = document.querySelector(`.js-wall-verti-rigth-${i}-${j}`)
+                if (wall?.classList) {
+                    wall.classList.remove("maze-wall--active")
+                }
+            } 
+        }
+    } 
 }
 
 
@@ -245,8 +367,9 @@ function maxArray (arr) {
 }
 
 
-function getAction (valueFunc, x, y) {
+function getAction (valueFunc, x, y, direction) {
     let value = new Array(4).fill(0)
+    let attachValue = new Array(4).fill(0)
     
     if (x !== 0 && maze[x][y][0] === 1) {
         value[0] = valueFunc[x-1][y]
@@ -269,17 +392,33 @@ function getAction (valueFunc, x, y) {
         value[3] = -10000.
     }
 
-    return maxArray(value)
+    for (let i=0; i<4; i++) {
+        attachValue[i] = value[directionPolicy[`${direction}`][i]]
+    }
+
+    return [maxArray(value), maxArray(attachValue)]
 }
 
 
 const test = function (valueFunc) {
+    let command = ""
+    let direction = 1
     let [x, y] = env.reset()
     let done = false
     let index = 0
+    let path = ""
 
     while (!done) {
-        action = getAction(valueFunc, x, y)
+        let [action, attachValue] = getAction(valueFunc, x, y, direction)
+        if (action === 0) {
+            path += "U"
+        } else if (action === 1) {
+            path += "D"
+        } else if (action === 2) {
+            path += "L"
+        } else {
+            path += "R"
+        }
         let [[next_x, next_y], reward, newDone] = env.step(action)
         let ele = env.getElement(next_x, next_y)
         if (!newDone) {
@@ -293,6 +432,8 @@ const test = function (valueFunc) {
             break
         }
     }
+
+    return path
 }
 
 
@@ -326,9 +467,25 @@ solveButton.addEventListener("click", (e)=> {
             break
         }
     }
-    console.log(valueFunc)
-    test(valueFunc)
+    const path = test(valueFunc)
+
+    const current = "test"
+    const startStr = `${start[0]}${start[1]}`
+    const endStr = `${target[0]}${target[1]}`
+
+    fetch(host + `maze/api/get-maze.php?current-maze=${mazeToString(maze)}&path=${path}&start=${startStr}&end=${endStr}`, {mode: 'no-cors', method:'get'})
+    .then(function(response) {
+    }).catch(()=> {console.log("Error")})
 })
 
 
+getBtn.addEventListener("click", (e)=> {
+    fetchMaze(`${api}${e.target.parentNode.querySelector("#maze-id").value}`)
+})
 
+document.addEventListener("keydown", (e)=> {
+    console.log(e)
+    if (e.keyCode === 13) {
+        fetchMaze(`${api}${e.target.parentNode.querySelector("#maze-id").value}`)
+    }
+})
